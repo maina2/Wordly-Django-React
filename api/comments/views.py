@@ -4,6 +4,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Comment
 from .serializers import CommentSerializer
+from django.shortcuts import get_object_or_404
+from posts.models import Post
 
 class CommentListCreateView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -14,10 +16,13 @@ class CommentListCreateView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)  # ✅ Get the post instance
         serializer = CommentSerializer(data=request.data)
+        
         if serializer.is_valid():
-            serializer.save(author=request.user, post_id=post_id)
+            serializer.save(author=request.user, post=post)  # ✅ Assign post here
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
