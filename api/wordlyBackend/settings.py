@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'comments',
     'likes',
     'bookmarks',
+    'follows',
 ]
 
 REST_FRAMEWORK = {
