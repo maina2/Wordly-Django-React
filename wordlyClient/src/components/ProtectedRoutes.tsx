@@ -1,14 +1,15 @@
 import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import api from "../api"; // Ensure this matches your API import path
+import api from "../api";
 import { useState, useEffect } from "react";
 
-// Define the expected shape of a decoded JWT token
 interface DecodedToken {
   exp: number;
+  // Add other token fields you might need
+  user_id?: number;
+  username?: string;
 }
 
-// Define the Props for the ProtectedRoute
 interface ProtectedRouteProps {
   children: JSX.Element;
 }
@@ -31,7 +32,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     }
 
     try {
-      const response = await api.post("/api/token/refresh/", { refresh: refreshToken });
+      // Updated endpoint to match your Django URL structure
+      const response = await api.post("/users/token/refresh/", { 
+        refresh: refreshToken 
+      });
+      
       if (response.status === 200) {
         localStorage.setItem(ACCESS_TOKEN, response.data.access);
         setIsAuthorized(true);
@@ -39,8 +44,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
         setIsAuthorized(false);
       }
     } catch (error) {
-      console.error("Error refreshing token:", error);
-      setIsAuthorized(false);
+      console.error("Token refresh failed:", error);
+      logoutUser();
     }
   };
 
@@ -53,25 +58,36 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
     try {
       const decoded: DecodedToken = jwtDecode(token);
-      const tokenExpiration = decoded.exp;
       const now = Date.now() / 1000;
 
-      if (tokenExpiration < now) {
+      if (decoded.exp < now) {
         await refreshAccessToken();
       } else {
+        // Verify token with backend
+        await api.get("/users/profile/");
         setIsAuthorized(true);
       }
     } catch (error) {
-      console.error("Error decoding token:", error);
-      setIsAuthorized(false);
+      console.error("Authentication failed:", error);
+      if ((error as any)?.response?.status === 401) {
+        await refreshAccessToken();
+      } else {
+        setIsAuthorized(false);
+      }
     }
   };
 
+  const logoutUser = () => {
+    localStorage.removeItem(ACCESS_TOKEN);
+    localStorage.removeItem(REFRESH_TOKEN);
+    setIsAuthorized(false);
+  };
+
   if (isAuthorized === null) {
-    return <div>Loading...</div>; // You can replace this with a spinner
+    return <div className="loading-spinner">Authenticating...</div>;
   }
 
-  return isAuthorized ? children : <Navigate to="/login" />;
+  return isAuthorized ? children : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;

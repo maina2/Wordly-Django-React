@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000"; // Change this if your backend URL is different
+const API_URL = "http://localhost:8000";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -9,12 +9,27 @@ const api = axios.create({
   },
 });
 
+// List of endpoints that don't need authentication
+const publicEndpoints = [
+  '/users/register/',
+  '/users/login/',
+  // Add other public endpoints here
+];
+
 // Add a request interceptor to include JWT token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("access");; // Retrieve token from local storage
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    // Check if the endpoint is public
+    const isPublicEndpoint = publicEndpoints.some(endpoint => 
+      config.url?.includes(endpoint)
+    );
+
+    // Only add token for non-public endpoints
+    if (!isPublicEndpoint) {
+      const token = localStorage.getItem("access");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },
