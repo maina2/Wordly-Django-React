@@ -1,9 +1,21 @@
 import api from "../api";
 
 // Create a new post
-export const createPost = async (postData: { title: string; content: string }) => {
+export const createPost = async (postData: { title: string; content: string; image?: File }) => {
   try {
-    const response = await api.post("/posts/", postData);
+    const formData = new FormData();
+    formData.append("title", postData.title);
+    formData.append("content", postData.content);
+    if (postData.image) {
+      formData.append("image", postData.image);
+    }
+
+    const response = await api.post("/posts/", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",  // Required for file uploads
+      },
+    });
+
     return response.data;
   } catch (error) {
     console.error("Error creating post:", error);

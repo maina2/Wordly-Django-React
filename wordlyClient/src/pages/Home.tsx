@@ -2,8 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getPosts, createPost, updatePost, deletePost } from "../services/postsServices";
 import "../styles/homepage.css";
+import Comments from "../components/Comments";
+import { logout } from "../services/authService";
+import { useNavigate } from "react-router-dom";
+
+
+
+
 
 const Home = () => {
+  const navigate = useNavigate();
+
   const [posts, setPosts] = useState<{ id: string; title: string; content: string }[]>([]);
   const [newPost, setNewPost] = useState({ title: "", content: "" });
   const [editingPost, setEditingPost] = useState<{ id: string; title: string; content: string } | null>(null);
@@ -56,6 +65,15 @@ const Home = () => {
       console.error("Error updating post:", error);
     }
   };
+  const handleLogout = async () => {
+    const refreshToken = localStorage.getItem("refresh");
+    if (refreshToken) {
+      const success = await logout(refreshToken);
+      if (success) {
+        navigate("/login");
+      }
+    }
+  };
 
   return (
     <div className="homepage">
@@ -66,7 +84,7 @@ const Home = () => {
           <li><Link to="/home" className="nav-link">Home</Link></li>
           <li><Link to="/explore" className="nav-link">Explore</Link></li>
           <li><Link to="/profile" className="nav-link">Profile</Link></li>
-          <li><Link to="/logout" className="nav-link login-btn">Logout</Link></li>
+          <button className="nav-link login-btn" onClick={handleLogout}>Logout</button>
         </ul>
       </nav>
 
@@ -75,12 +93,12 @@ const Home = () => {
         <div className="hero-content">
           <h1>Share Your Thoughts with the World</h1>
           <p>Write, explore, and connect with like-minded people.</p>
-          <Link to="/register" className="cta-btn">Start Writing</Link>
+          <a href="#main-content" className="cta-btn">Start Writing</a>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="main-content">
+      <div className="main-content" id="main-content"  >
         {/* Sidebar */}
         <aside className="sidebar">
           <h3>Trending Topics</h3>
@@ -143,6 +161,7 @@ const Home = () => {
                   <button onClick={() => setEditingPost(post)}>Edit</button>
                   <button onClick={() => handleDeletePost(post.id)}>Delete</button>
                 </div>
+                <Comments postId={post.id} />
               </div>
             ))
           ) : (

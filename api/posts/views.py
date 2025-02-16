@@ -4,14 +4,19 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from .models import Post
 from .serializers import PostSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
+
+
+
 
 class PostListCreateView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes = [MultiPartParser, FormParser]  # Enable file uploads
 
     def get(self, request):
-        posts = Post.objects.all().order_by("-created_at")
+        posts = Post.objects.order_by('-created_at')
         serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data)
 
     def post(self, request):
         serializer = PostSerializer(data=request.data)

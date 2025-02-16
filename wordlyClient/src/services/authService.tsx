@@ -87,7 +87,19 @@ export const getUserProfile = async () => {
 };
 
 // Logout user
-export const logoutUser = () => {
-  localStorage.removeItem("access");
-  localStorage.removeItem("refresh");
+export const logout = async (refreshToken: string) => {
+  try {
+    console.log("Logging out with token:", refreshToken); // Debugging
+    const response = await api.post("/users/logout/", { refresh_token: refreshToken });
+
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+
+    console.log("Logout response:", response.data); // Debugging
+    return true;
+  } catch (error) {
+    console.error("Error logging out:", error);
+    return false;
+  }
 };
+

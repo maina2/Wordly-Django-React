@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { registerUser } from "../services/authServices";
+import { registerUser } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import "../styles/auth.css"; // Use the shared Auth.css
 

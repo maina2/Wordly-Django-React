@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { loginUser } from "../services/authServices";
+import { loginUser } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import "../styles/auth.css"; // Use the shared Auth.css
 

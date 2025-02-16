@@ -362,7 +362,60 @@
   background: #fff;
   border-radius: 8px;
 }
+/* Modify in HomePage.css */
+.post-form, .edit-form {
+  /* ... existing styles ... */
+  width: 100%;
+  box-sizing: border-box; /* Add this to include padding in width calculation */
+}
 
+.post-form input,
+.post-form textarea,
+.edit-form input,
+.edit-form textarea {
+  /* ... existing styles ... */
+  box-sizing: border-box; /* Add this to include padding and border in width calculation */
+  max-width: 100%; /* Ensure content doesn't overflow */
+}
+/* Modify in HomePage.css */
+.sidebar {
+  width: 250px;
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: fit-content; /* Add this to make it fit content */
+  position: sticky; /* Add this to make it stick */
+  top: 2rem; /* Add this to give some space from top */
+}
+
+/* Modify the main-content to align items at start */
+.main-content {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex: 1;
+  align-items: flex-start; /* Add this to align items at the top */
+}
+.post-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.form-actions button {
+  flex: 1;
+}
 /* Responsive Design Additions */
 @media (max-width: 768px) {
   .post-form,
