@@ -2,6 +2,8 @@ import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import api from "../api";
 import { useState, useEffect } from "react";
+import React, { JSX } from "react";
+
 
 interface DecodedToken {
   exp: number;

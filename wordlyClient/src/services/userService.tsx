@@ -1,7 +1,7 @@
 // userService.tsx
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/users";
+const API_URL = "https://wordly-api.onrender.com/users";
 
 const getAuthToken = () => {
   const token = localStorage.getItem("access");

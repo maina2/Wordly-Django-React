@@ -10,7 +10,7 @@ interface Comment {
 }
 
 interface CommentsProps {
-  postId: number;
+  postId: string;
 }
 
 const Comments: React.FC<CommentsProps> = ({ postId }) => {
@@ -23,7 +23,7 @@ const Comments: React.FC<CommentsProps> = ({ postId }) => {
 
   const fetchComments = async () => {
     try {
-      const data = await getComments(postId);
+      const data = await getComments(postId.toString());
       setComments(data);
     } catch (error) {
       console.error("Error fetching comments:", error);
@@ -34,7 +34,7 @@ const Comments: React.FC<CommentsProps> = ({ postId }) => {
     e.preventDefault();
     if (!newComment.trim()) return;
     try {
-      const comment = await createComment(postId, newComment);
+      const comment = await createComment(postId.toString(), newComment);
       setComments([...comments, comment]);
       setNewComment("");
     } catch (error) {
@@ -44,7 +44,7 @@ const Comments: React.FC<CommentsProps> = ({ postId }) => {
 
   const handleDeleteComment = async (commentId: number) => {
     try {
-      await deleteComment(commentId);
+      await deleteComment(commentId.toString());
       setComments(comments.filter((comment) => comment.id !== commentId));
     } catch (error) {
       console.error("Error deleting comment:", error);

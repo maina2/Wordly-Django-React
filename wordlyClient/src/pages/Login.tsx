@@ -25,7 +25,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await loginUser(credentials);
+      await loginUser(credentials);  // ✅ Removed unused `response`
       setSuccessMessage("Login successful! Redirecting...");
       setTimeout(() => navigate("/home"), 1500);
     } catch (err: any) {
@@ -36,55 +36,58 @@ const Login = () => {
   };
 
   return (
-<div className="auth-page-container">
-  <div className="auth-card">
-    <div className="auth-header">
-      <h2 className="auth-title">Welcome Back</h2>
-      <p className="auth-subtitle">Sign in to continue your journey</p>
+    <div className="auth-page-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h2 className="auth-title">Welcome Back</h2>
+          <p className="auth-subtitle">Sign in to continue your journey</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="input-group">
+            <label htmlFor="username" className="input-label">Username</label>
+            <input
+              id="username"
+              type="text"
+              className="auth-input"
+              value={credentials.username}
+              onChange={handleInputChange}
+              placeholder="Enter your username"
+              required
+            />
+            <span className="input-icon">👤</span>
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="password" className="input-label">Password</label>
+            <input
+              id="password"
+              type="password"
+              className="auth-input"
+              value={credentials.password}
+              onChange={handleInputChange}
+              placeholder="••••••••"
+              required
+            />
+            <span className="input-icon">🔒</span>
+          </div>
+
+          {error && <p className="error-message">{error}</p>}
+          {successMessage && <p className="success-message">{successMessage}</p>}
+
+          <button type="submit" className="auth-button">
+            {isLoading ? "Signing In..." : "Sign In"}
+          </button>
+        </form>
+
+        <p className="auth-footer">
+          Don't have an account?{" "}
+          <button onClick={() => navigate("/register")} className="auth-link">
+            Create account
+          </button>
+        </p>
+      </div>
     </div>
-
-    <form onSubmit={handleSubmit} className="auth-form">
-      <div className="input-group">
-        <label htmlFor="username" className="input-label">Username</label>
-        <input
-          id="username"
-          type="text"
-          className="auth-input"
-          value={credentials.username}
-          onChange={handleInputChange}
-          placeholder="Enter your username"
-          required
-        />
-        <span className="input-icon">👤</span>
-      </div>
-
-      <div className="input-group">
-        <label htmlFor="password" className="input-label">Password</label>
-        <input
-          id="password"
-          type="password"
-          className="auth-input"
-          value={credentials.password}
-          onChange={handleInputChange}
-          placeholder="••••••••"
-          required
-        />
-        <span className="input-icon">🔒</span>
-      </div>
-
-      <button type="submit" className="auth-button">
-        Sign In
-      </button>
-    </form>
-
-    <p className="auth-footer">
-      Don't have an account?{" "}
-      <button onClick={() => navigate("/register")} className="auth-link">
-        Create account
-      </button>
-    </p>
-  </div>
-</div>
   );
 };
 
