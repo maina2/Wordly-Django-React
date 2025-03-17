@@ -2,7 +2,7 @@
 
 Wordly is a content publishing platform similar to Medium, allowing users to create, share, and read articles. It is designed to offer a seamless experience for both content creators and readers.
 
-**Live Demo:** [Wordly](https://wordly-client.onrender.com/landingpage)
+**Live Demo:** [Wordly](https://wordly-client.onrender.com/)
 
 ## Features
 
