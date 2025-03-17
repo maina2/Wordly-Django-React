@@ -63,6 +63,7 @@ bash
 Copy
 Edit
 python manage.py migrate
+
 Start the Django development server:
 bash
 Copy
